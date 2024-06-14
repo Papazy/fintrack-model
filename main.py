@@ -53,5 +53,6 @@ def predict():
         return jsonify({'error': 'Invalid input or internal error.'}), 400
 
 if __name__ == '__main__':
+    print(" Starting app...")
     app.run(debug=True)
 
