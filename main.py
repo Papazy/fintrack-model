@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 # Load the model
 MODEL_PATH = 'model.h5'
+SMALL_MODEL_PATH = 'small_model.h5'
+small_model = load_model(SMALL_MODEL_PATH)
 model = load_model(MODEL_PATH)
 
 def make_predictions(model, sales_and_spend, window_size=360, predict_days=30):
@@ -43,8 +45,12 @@ def predict():
         predict_days = 30  # You can adjust this value as needed
         
         # Make predictions
-        res = make_predictions(model, sales_and_spend, window_size=360, predict_days=predict_days)
-        
+        if sales_and_spend.shape[0] < 360:
+            print("Using small model")
+            res = make_predictions(small_model, sales_and_spend, window_size=30, predict_days=predict_days)
+        else :
+            print("Using Big model")
+            res = make_predictions(model, sales_and_spend, window_size=360, predict_days=predict_days)
         # Convert prediction results to list for JSON serialization
         return jsonify({'prediction': res.tolist()})
     except ValueError as e:
